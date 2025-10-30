@@ -40,6 +40,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
     orientation: "portrait",
     scheme: "miaapp",
     userInterfaceStyle: "automatic",
+    icon: "./assets/images/icon-ios.png",
     newArchEnabled: true,
     updates: {
       url: "https://u.expo.dev/cb26971b-9cd8-4f46-ba13-809821a5015e",
@@ -51,12 +52,17 @@ export default ({ config }: { config: ExpoConfig }) => ({
       ...config.ios,
       supportsTablet: false,
       bundleIdentifier: getEnvironmentValues().bundleIdentifier,
+      icon: "./assets/images/icon-ios.png",
       config: {
         usesNonExemptEncryption: false,
       },
     },
     android: {
       ...config.android,
+      adaptiveIcon: {
+        foregroundImage: "./assets/images/icon-android.png",
+        backgroundColor: "#fffff4",
+      },
       package: getEnvironmentValues().package,
       googleServicesFile: getGoogleServicesFile(),
       permissions: ["NOTIFICATIONS"],
@@ -68,6 +74,8 @@ export default ({ config }: { config: ExpoConfig }) => ({
       [
         "expo-splash-screen",
         {
+          image: "./assets/images/splash.png",
+          imageWidth: 150,
           resizeMode: "contain",
           backgroundColor: "#171717",
         },
@@ -86,7 +94,12 @@ export default ({ config }: { config: ExpoConfig }) => ({
           mode: "development",
         },
       ],
-      "expo-notifications",
+      [
+        "expo-notifications",
+        {
+          sounds: ["assets/sounds/cash.wav"],
+        },
+      ],
       [
         "expo-camera",
         {
