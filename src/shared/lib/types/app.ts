@@ -1,1 +1,1 @@
-export type IndexView = "home";
+export type IndexView = "home" | "qr";

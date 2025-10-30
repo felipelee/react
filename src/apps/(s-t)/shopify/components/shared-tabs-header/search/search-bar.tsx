@@ -12,11 +12,6 @@ export const SearchBar: FC = () => {
 
   const router = useRouter();
 
-  const handleSearch = (value: string) => {
-    setQuery(value);
-    router.setParams({ searchQuery: value });
-  };
-
   return (
     <View
       /* Fixed paddings and absolute icons prevent intrinsic text width changes from
@@ -27,8 +22,11 @@ export const SearchBar: FC = () => {
       <SearchIcon size={18} color="#B5B5B5" style={styles.searchIcon} />
       <TextInput
         value={query}
-        onChangeText={handleSearch}
-        placeholder="Search products"
+        onChangeText={(value) => {
+          setQuery(value);
+          router.setParams({ query: value });
+        }}
+        placeholder="Search"
         placeholderTextColor="#B5B5B5"
         /* Horizontal padding reserves space for absolute icons, avoiding text reflow
          * during press/clear toggles for smoother perceived animation. */
@@ -40,7 +38,7 @@ export const SearchBar: FC = () => {
         <Pressable
           onPress={() => {
             setQuery("");
-            router.setParams({ searchQuery: "" });
+            router.setParams({ query: "" });
           }}
           style={styles.scanIcon}
         >
