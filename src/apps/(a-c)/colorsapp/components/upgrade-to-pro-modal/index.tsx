@@ -1,12 +1,10 @@
 import React, { FC, useCallback, useEffect, useRef } from "react";
 
 import BottomSheet, { BottomSheetBackdropProps, BottomSheetView } from "@gorhom/bottom-sheet";
-import { Image } from "expo-image";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 
 import { Backdrop } from "./backdrop";
 import { FeatureItem } from "./feature-item";
-import PaywallBlurBg from "@/assets/images/misc/paywall-blur-bg.png";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, {
   useAnimatedStyle,
@@ -28,8 +26,6 @@ export const UpgradeToProModal: FC<Props> = ({ isVisible, setIsVisible }) => {
   const ref = useRef<BottomSheet>(null);
 
   useEffect(() => {
-    // WHY: Drive sheet open/close from external state to keep animation source-of-truth at route level
-    // BottomSheet handles the spring/timing internally; we only toggle imperative methods here
     if (isVisible) {
       ref.current?.expand();
     } else {
@@ -38,24 +34,14 @@ export const UpgradeToProModal: FC<Props> = ({ isVisible, setIsVisible }) => {
   }, [isVisible]);
 
   const renderBackdrop = useCallback(
-    // WHY: Custom backdrop enables branded background + gradient while still binding to sheet's animated index
     (props: BottomSheetBackdropProps) => <Backdrop {...props} />,
     []
   );
 
-  // ANIMATION: Pulsing "Upgrade now" button background
-  // - Visual goal: subtle breathing effect to attract attention without being noisy
-  // - Timeline: scale 1.2 ↔ 2.0 in a yoyo loop (3s expand + 3s contract)
-  // - withRepeat -1: infinite; reverse=true: ping-pong for symmetric motion
-  // Note: Worklet runs on UI thread, long durations don't block JS
   const rSubmitBtnStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          // Interpolation explained:
-          // withSequence(1.0 → 2.0 → 1.2) over 6000ms total, then repeats reversed:
-          //  - 1st withTiming: 1.0 → 2.0 (3000ms) = slow expand under blurred image for soft glow
-          //  - 2nd withTiming: 2.0 → 1.2 (3000ms) = gentle settle, keeps slight emphasis over 1.0
           scale: withRepeat(
             withSequence(withTiming(2, { duration: 3000 }), withTiming(1.2, { duration: 3000 })),
             -1,
@@ -96,11 +82,9 @@ export const UpgradeToProModal: FC<Props> = ({ isVisible, setIsVisible }) => {
             onPress={simulatePress}
           >
             <Animated.View
-              className="absolute top-0 left-0 right-0 bottom-0"
+              className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-br from-purple-400 to-pink-400"
               style={rSubmitBtnStyle}
-            >
-              <Image source={PaywallBlurBg} style={styles.btnImage} contentFit="cover" />
-            </Animated.View>
+            />
             <Text className="text-lg font-semibold text-[#070609]" maxFontSizeMultiplier={1.1}>
               Upgrade now
             </Text>
@@ -140,10 +124,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     overflow: "hidden",
-  },
-  btnImage: {
-    width: "100%",
-    height: "100%",
   },
 });
 
