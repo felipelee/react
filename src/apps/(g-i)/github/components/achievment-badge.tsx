@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { useWindowDimensions } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 import { Image } from "expo-image";
 import Animated, {
   Extrapolation,
@@ -11,42 +11,39 @@ import Animated, {
 // github-achievements-carousel-animation 🔽
 
 type Props = {
-  index: number; // Badge position in carousel for rotation calculations
-  imageSource: number; // Achievement image asset
-  scrollOffsetX: SharedValue<number>; // Shared scroll position for animation coordination
+  index: number;
+  imageSource: number | null;
+  scrollOffsetX: SharedValue<number>;
 };
 
 export const AchievementBadge: FC<Props> = ({ index, imageSource, scrollOffsetX }) => {
   const { width } = useWindowDimensions();
 
-  // 3D flip animation: badge rotates as user scrolls between achievements
   const rContainerStyle = useAnimatedStyle(() => {
-    // Define scroll positions: previous page, current page, next page
     const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
 
-    // Create 3D rotation effect:
-    // Previous page: 360° (full rotation from behind)
-    // Current page: 0° (face forward, fully visible)
-    // Next page: -360° (rotating away behind)
     const rotate = interpolate(
       scrollOffsetX.value,
       inputRange,
-      [360, 0, -360], // Rotation degrees at each scroll position
-      Extrapolation.EXTEND // Continue rotation beyond defined range
+      [360, 0, -360],
+      Extrapolation.EXTEND
     );
 
     return {
-      transform: [{ rotateY: `${rotate}deg` }], // Y-axis rotation for 3D flip effect
+      transform: [{ rotateY: `${rotate}deg` }],
     };
   });
 
   return (
     <Animated.View
-      // 65% screen width for prominent display, perfect circle with white border
       className="aspect-square rounded-full border-[10px] border-white overflow-hidden"
       style={[{ width: width * 0.65 }, rContainerStyle]}
     >
-      <Image source={imageSource} style={{ width: "100%", height: "100%" }} contentFit="cover" />
+      {imageSource ? (
+        <Image source={imageSource} style={{ width: "100%", height: "100%" }} contentFit="cover" />
+      ) : (
+        <View className="w-full h-full bg-white/10" />
+      )}
     </Animated.View>
   );
 };

@@ -1,12 +1,8 @@
-import GoogleChromeImage from "@/assets/images/apps/google-chrome.png";
-import GmailImage from "@/assets/images/apps/gmail.png";
-import GithubImage from "@/assets/images/apps/github.png";
-import GrokImage from "@/assets/images/apps/grok.png";
 import { App } from "../apps-list";
 
 export const googleChrome: App = {
   name: "Google Chrome",
-  imageSource: GoogleChromeImage,
+  imageSource: null,
   animations: [
     {
       name: "Top tabs indicator animation",
@@ -29,7 +25,7 @@ export const googleChrome: App = {
 
 export const gmail: App = {
   name: "Gmail",
-  imageSource: GmailImage,
+  imageSource: null,
   animations: [
     {
       name: "Header scroll animation",
@@ -44,7 +40,7 @@ export const gmail: App = {
 
 export const github: App = {
   name: "Github",
-  imageSource: GithubImage,
+  imageSource: null,
   animations: [
     {
       name: "Profile header title animation",
@@ -59,7 +55,7 @@ export const github: App = {
 
 export const grok: App = {
   name: "Grok",
-  imageSource: GrokImage,
+  imageSource: null,
   animations: [
     {
       name: "Attach file menu animation",

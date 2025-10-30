@@ -40,7 +40,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
     orientation: "portrait",
     scheme: "miaapp",
     userInterfaceStyle: "automatic",
-    icon: "./assets/images/icon-ios.png",
+    // icon: "./assets/images/icon-ios.png", // Commented out - missing asset
     newArchEnabled: true,
     updates: {
       url: "https://u.expo.dev/cb26971b-9cd8-4f46-ba13-809821a5015e",
@@ -52,7 +52,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
       ...config.ios,
       supportsTablet: false,
       bundleIdentifier: getEnvironmentValues().bundleIdentifier,
-      icon: "./assets/images/icon-ios.png",
+      // icon: "./assets/images/icon-ios.png", // Commented out - missing asset
       config: {
         usesNonExemptEncryption: false,
       },
@@ -60,7 +60,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
     android: {
       ...config.android,
       adaptiveIcon: {
-        foregroundImage: "./assets/images/icon-android.png",
+        // foregroundImage: "./assets/images/icon-android.png", // Commented out - missing asset
         backgroundColor: "#fffff4",
       },
       package: getEnvironmentValues().package,
@@ -71,15 +71,16 @@ export default ({ config }: { config: ExpoConfig }) => ({
     plugins: [
       "expo-router",
       "expo-font",
-      [
-        "expo-splash-screen",
-        {
-          image: "./assets/images/splash.png",
-          imageWidth: 150,
-          resizeMode: "contain",
-          backgroundColor: "#171717",
-        },
-      ],
+      // Commented out splash screen plugin - missing asset
+      // [
+      //   "expo-splash-screen",
+      //   {
+      //     image: "./assets/images/splash.png",
+      //     imageWidth: 150,
+      //     resizeMode: "contain",
+      //     backgroundColor: "#171717",
+      //   },
+      // ],
       [
         "@sentry/react-native/expo",
         {
@@ -94,12 +95,13 @@ export default ({ config }: { config: ExpoConfig }) => ({
           mode: "development",
         },
       ],
-      [
-        "expo-notifications",
-        {
-          sounds: ["assets/sounds/cash.wav"],
-        },
-      ],
+      // Commented out notifications plugin - missing sound asset
+      // [
+      //   "expo-notifications",
+      //   {
+      //     sounds: ["assets/sounds/cash.wav"],
+      //   },
+      // ],
       [
         "expo-camera",
         {

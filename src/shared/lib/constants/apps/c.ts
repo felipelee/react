@@ -1,11 +1,8 @@
-import ColorsAppImage from "@/assets/images/apps/colors-app.png";
-import CanvaImage from "@/assets/images/apps/canva.png";
-import ChatGPTImage from "@/assets/images/apps/chatgpt.png";
 import { App } from "../apps-list";
 
 export const canva: App = {
   name: "Canva",
-  imageSource: CanvaImage,
+  imageSource: null,
   animations: [
     {
       name: "Header transition animation",
@@ -16,7 +13,7 @@ export const canva: App = {
 
 export const chatgpt: App = {
   name: "ChatGPT",
-  imageSource: ChatGPTImage,
+  imageSource: null,
   animations: [
     {
       name: "Shimmer text animation",
@@ -27,7 +24,7 @@ export const chatgpt: App = {
 
 export const colorsApp: App = {
   name: "ColorsApp",
-  imageSource: ColorsAppImage,
+  imageSource: null,
   animations: [
     {
       name: "Color picker background animation",

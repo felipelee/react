@@ -1,11 +1,8 @@
-import ShopifyImage from "@/assets/images/apps/shopify.png";
-import SlackImage from "@/assets/images/apps/slack.png";
-import ShowcaseImage from "@/assets/images/apps/showcase.png";
 import { App } from "../apps-list";
 
 export const shopify: App = {
   name: "Shopify",
-  imageSource: ShopifyImage,
+  imageSource: null,
   animations: [
     {
       name: "Search screen top tabs animation",
@@ -28,7 +25,7 @@ export const shopify: App = {
 
 export const slack: App = {
   name: "Slack",
-  imageSource: SlackImage,
+  imageSource: null,
   animations: [
     {
       name: "Catch up cards swipe animation",
@@ -43,7 +40,7 @@ export const slack: App = {
 
 export const showcase: App = {
   name: "Showcase",
-  imageSource: ShowcaseImage,
+  imageSource: null,
   animations: [
     {
       name: "Upcoming list scroll animation",

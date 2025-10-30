@@ -1,9 +1,8 @@
-import ViberImage from "@/assets/images/apps/viber.png";
 import { App } from "../apps-list";
 
 export const viber: App = {
   name: "Viber",
-  imageSource: ViberImage,
+  imageSource: null,
   animations: [
     {
       name: "Chats header animation",

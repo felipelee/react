@@ -20,13 +20,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { colorKit } from "reanimated-color-picker";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
-import LogoWithText from "@/assets/images/misc/logo-with-text.png";
-import { Image } from "expo-image";
 import CurvedDivider from "./curved-divider";
 
 type AppSection = {
   title: string;
-  imageSource: number;
+  imageSource: number | null;
   data: App["animations"];
 };
 
@@ -53,191 +51,134 @@ const Animations: FC<Props> = ({ navigation }) => {
         data: app.animations,
       })
     )
-    .filter((section: AppSection) =>
-      section.title.toLowerCase().includes(query.trim().toLowerCase())
-    );
+    .filter((section) => section.data.length > 0);
 
-  const _renderListHeader = () => {
-    if (query.trim()) return <></>;
-    return <NewAnimations navigation={navigation} />;
-  };
-
-  const _renderSectionHeader = useCallback(
-    ({ section }: { section: AppSection }) => (
-      <View className="bg-neutral-900">
-        <View className="flex-row items-center gap-2 px-5 pt-4 pb-1">
-          <Image
-            source={section.imageSource}
-            style={{ height: 20, width: 20 }}
-            contentFit="contain"
-          />
-          <Text className="text-neutral-50 text-base font-poppins-semibold">{section.title}</Text>
-          <CurvedDivider />
-          <View className="absolute top-0 bottom-0 right-0 w-5 bg-neutral-900" />
-        </View>
-        <View className="absolute -bottom-3 left-0 right-0 h-4">
-          <LinearGradient
-            colors={["#171717", colorKit.setAlpha("#171717", 0.25).hex()]}
-            style={StyleSheet.absoluteFill}
-            locations={[0.25, 1]}
-          />
-        </View>
-      </View>
-    ),
-    []
-  );
-
-  const _renderEmptyListComponent = useCallback(
-    () => (
-      <Animated.View entering={FadeInDown} className="flex-1 items-center justify-center">
-        <Text className="text-neutral-400 text-base font-poppins-medium">No animations found</Text>
-      </Animated.View>
-    ),
-    []
-  );
+  const filteredSections = useMemo(() => {
+    if (!query.trim()) return sections;
+    const lowerQuery = query.toLowerCase();
+    return sections
+      .map((section) => ({
+        ...section,
+        data: section.data.filter((animation) =>
+          animation.name.toLowerCase().includes(lowerQuery)
+        ),
+      }))
+      .filter((section) => section.data.length > 0);
+  }, [query, sections]);
 
   const flatData: FlatDataItem[] = useMemo(() => {
-    const dataArr: FlatDataItem[] = [];
-    sections.forEach((section) => {
-      dataArr.push({ type: "header", section });
+    const result: FlatDataItem[] = [];
+    filteredSections.forEach((section) => {
+      result.push({ type: "header", section });
       section.data.forEach((animation) => {
-        dataArr.push({ type: "item", animation });
+        result.push({ type: "item", animation });
       });
     });
-    return dataArr;
-  }, [sections]);
+    return result;
+  }, [filteredSections]);
 
-  const headerComponentCount = query.trim() ? 0 : 1;
-
-  const stickyHeaderIndices = useMemo(() => {
-    const indices: number[] = [];
-    flatData.forEach((entry, index) => {
-      if (entry.type === "header") {
-        indices.push(index + headerComponentCount);
+  const onPress = useCallback(
+    (href: string) => {
+      if (Platform.OS !== "web") {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }
-    });
-    return indices;
-  }, [flatData, headerComponentCount]);
-
-  const _renderFlatListItem = useCallback(
-    ({ item }: ListRenderItemInfo<FlatDataItem>) => {
-      if (item.type === "header") {
-        return _renderSectionHeader({ section: item.section });
-      }
-      return (
-        <Pressable
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            if (Platform.OS === "android") {
-              // There is weird bug on Android when you navigate from drawer to one animation
-              // and after open drawer on go to other. It doesn't work so I added this setTimeout to fix it
-              setTimeout(() => {
-                router.push(item.animation.href);
-              }, 0);
-            } else {
-              router.push(item.animation.href);
-            }
-            navigation.closeDrawer();
-          }}
-          style={styles.listItem}
-        >
-          <Text className="text-neutral-400 text-sm font-poppins-medium">
-            {item.animation.name}
-          </Text>
-        </Pressable>
-      );
+      navigation.closeDrawer();
+      router.push(href as any);
     },
-    [router, _renderSectionHeader, navigation]
+    [navigation, router]
   );
 
-  return (
-    <KeyboardAvoidingView className="flex-1" behavior="padding">
-      <View className="flex-1 bg-neutral-900" style={{ paddingTop: insets.top + 16 }}>
-        <View className="flex-row items-end justify-between gap-2 px-5 pb-5">
-          <Pressable
-            hitSlop={20}
-            style={{ flexDirection: "row", gap: 4, alignItems: "center" }}
-            onPress={() => router.replace("/")}
+  const renderItem = useCallback(
+    ({ item, index }: ListRenderItemInfo<FlatDataItem>) => {
+      if (item.type === "header") {
+        return (
+          <Animated.View
+            entering={FadeInDown.delay(index * 20)}
+            className="flex-row items-center gap-3 mb-3 mt-6"
           >
-            <Image source={LogoWithText} style={{ height: 40, width: 80 }} contentFit="contain" />
-          </Pressable>
-          <View className="flex-row items-center gap-2 mb-1">
-            <Text className="text-neutral-400 text-sm font-poppins-medium">
-              <Text className="text-neutral-50">
-                {sections.reduce((acc, section) => acc + section.data.length, 0)}
-              </Text>{" "}
-              animations
+            {item.section.imageSource && (
+              <View className="w-10 h-10 rounded-xl bg-white/10" />
+            )}
+            <Text className="text-white text-lg font-semibold">
+              {item.section.title}
             </Text>
-            <Text className="text-neutral-400 text-sm font-poppins-medium">
-              <Text className="text-neutral-50">{sections.length}</Text>{" "}
-              {sections.length === 1 ? "app" : "apps"}
-            </Text>
-          </View>
-        </View>
-        <View
-          className="rounded-xl h-11 px-3 mx-4 mb-1 overflow-hidden"
-          style={{
-            backgroundColor: Platform.OS === "ios" ? "#515151" : "#1C1C1C",
-            borderWidth: Platform.OS === "ios" ? 0 : 1,
-            borderColor: Platform.OS === "ios" ? "transparent" : "#303030",
-          }}
-        >
-          {Platform.OS === "ios" ? (
-            <>
-              <View className="absolute h-11 left-0.5 right-0.5 top-1 bg-[#1C1C1C] rounded-xl shadow-[-4_-3_3_#1C1C1C]" />
-              <View className="absolute h-11 left-0.5 right-0.5 top-1 bg-[#1C1C1C] rounded-xl shadow-[4_-3_3_#1C1C1C]" />
-            </>
-          ) : null}
+          </Animated.View>
+        );
+      }
 
-          <TextInput
-            ref={drawerTextInputRef}
-            placeholder="Search app..."
-            placeholderTextColor="#a8a29e"
-            selectionColor="#fffff4"
-            className="text-neutral-400 font-poppins-medium h-full py-0"
-            value={query}
-            onChangeText={setQuery}
-          />
+      return (
+        <Animated.View entering={FadeInDown.delay(index * 20)}>
+          <Pressable
+            className="px-4 py-3 mb-2 bg-white/5 rounded-xl active:bg-white/10"
+            onPress={() => onPress(item.animation.href)}
+          >
+            <Text className="text-white">{item.animation.name}</Text>
+          </Pressable>
+        </Animated.View>
+      );
+    },
+    [onPress]
+  );
+
+  const keyExtractor = useCallback((item: FlatDataItem, index: number) => {
+    if (item.type === "header") {
+      return `header-${item.section.title}`;
+    }
+    return `item-${item.animation.name}-${index}`;
+  }, []);
+
+  return (
+    <KeyboardAvoidingView
+      className="flex-1"
+      behavior="padding"
+      keyboardVerticalOffset={0}
+    >
+      <LinearGradient
+        colors={[
+          colorKit.setAlpha("#000000", 1).hex(),
+          colorKit.setAlpha("#1a1a2e", 0.95).hex(),
+        ]}
+        style={StyleSheet.absoluteFill}
+      />
+
+      <View
+        className="px-4 pb-4"
+        style={{
+          paddingTop: insets.top + 20,
+        }}
+      >
+        <View className="flex-row items-center justify-between mb-6">
+          <View className="h-12 w-32 bg-white/10 rounded-lg" />
+          <NewAnimations />
         </View>
-        <View className="flex-1">
-          <FlatList
-            data={flatData}
-            keyExtractor={(entry, index) =>
-              entry.type === "header"
-                ? `header-${entry.section.title}-${index}`
-                : `item-${entry.animation.name}-${index}`
-            }
-            renderItem={_renderFlatListItem}
-            ListHeaderComponent={_renderListHeader}
-            ListEmptyComponent={_renderEmptyListComponent}
-            contentContainerClassName="pt-3"
-            contentContainerStyle={{ paddingBottom: insets.bottom + 70 }}
-            stickyHeaderIndices={Platform.select({
-              ios: stickyHeaderIndices,
-              default: [],
-            })}
-            showsVerticalScrollIndicator={false}
-            keyboardDismissMode="on-drag"
-            keyboardShouldPersistTaps="handled"
-          />
-          <View className="absolute top-0 left-0 right-0 h-4">
-            <LinearGradient
-              colors={["#171717", colorKit.setAlpha("#171717", 0.1).hex()]}
-              style={StyleSheet.absoluteFill}
-              locations={[0.25, 1]}
-            />
-          </View>
-        </View>
+
+        <TextInput
+          ref={drawerTextInputRef}
+          className="h-12 px-4 bg-white/10 rounded-xl text-white placeholder:text-white/50"
+          placeholder="Search animations..."
+          placeholderTextColor="rgba(255,255,255,0.5)"
+          value={query}
+          onChangeText={setQuery}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
       </View>
+
+      <CurvedDivider />
+
+      <FlatList
+        data={flatData}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingBottom: insets.bottom + 20,
+        }}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      />
     </KeyboardAvoidingView>
   );
 };
-
-const styles = StyleSheet.create({
-  listItem: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-});
 
 export default memo(Animations);

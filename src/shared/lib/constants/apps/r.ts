@@ -1,9 +1,8 @@
-import RaycastImage from "@/assets/images/apps/raycast.png";
 import { App } from "../apps-list";
 
 export const raycast: App = {
   name: "Raycast",
-  imageSource: RaycastImage,
+  imageSource: null,
   animations: [
     {
       name: "Home search transition animation",

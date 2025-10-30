@@ -1,9 +1,8 @@
-import WhatsappImage from "@/assets/images/apps/whatsapp.png";
 import { App } from "../apps-list";
 
 export const whatsapp: App = {
   name: "Whatsapp",
-  imageSource: WhatsappImage,
+  imageSource: null,
   animations: [
     {
       name: "Updates screen header animation",

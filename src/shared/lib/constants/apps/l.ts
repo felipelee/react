@@ -1,11 +1,8 @@
-import LinearImage from "@/assets/images/apps/linear.png";
-import LinkedinImage from "@/assets/images/apps/linkedin.png";
-import LumaImage from "@/assets/images/apps/luma.png";
 import { App } from "../apps-list";
 
 export const linear: App = {
   name: "Linear",
-  imageSource: LinearImage,
+  imageSource: null,
   animations: [
     {
       name: "Button tabs indicator animation",
@@ -24,7 +21,7 @@ export const linear: App = {
 
 export const linkedin: App = {
   name: "Linkedin",
-  imageSource: LinkedinImage,
+  imageSource: null,
   animations: [
     {
       name: "Bottom tabs indicator animation",
@@ -39,7 +36,7 @@ export const linkedin: App = {
 
 export const luma: App = {
   name: "Luma",
-  imageSource: LumaImage,
+  imageSource: null,
   animations: [
     {
       name: "Discover city",

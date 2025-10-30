@@ -1,9 +1,8 @@
-import XImage from "@/assets/images/apps/x.png";
 import { App } from "../apps-list";
 
 export const x: App = {
   name: "X",
-  imageSource: XImage,
+  imageSource: null,
   animations: [
     {
       name: "Bottom tabs background animation",

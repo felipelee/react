@@ -1,9 +1,8 @@
-import FuseImage from "@/assets/images/apps/fuse.png";
 import { App } from "../apps-list";
 
 export const fuse: App = {
   name: "Fuse",
-  imageSource: FuseImage,
+  imageSource: null,
   animations: [
     {
       name: "Home tabs transition animation",

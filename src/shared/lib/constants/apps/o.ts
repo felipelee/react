@@ -1,9 +1,8 @@
-import OpalImage from "@/assets/images/apps/opal.png";
 import { App } from "../apps-list";
 
 export const opal: App = {
   name: "Opal",
-  imageSource: OpalImage,
+  imageSource: null,
   animations: [
     {
       name: "Start timer button animation",

@@ -1,10 +1,8 @@
-import PinterestImage from "@/assets/images/apps/pinterest.png";
-import PerplexityImage from "@/assets/images/apps/perplexity.png";
 import { App } from "../apps-list";
 
 export const pinterest: App = {
   name: "Pinterest",
-  imageSource: PinterestImage,
+  imageSource: null,
   animations: [
     {
       name: "Navigation between boards animation",
@@ -19,7 +17,7 @@ export const pinterest: App = {
 
 export const perplexity: App = {
   name: "Perplexity",
-  imageSource: PerplexityImage,
+  imageSource: null,
   animations: [
     {
       name: "Bottom sheet backdrop animation",

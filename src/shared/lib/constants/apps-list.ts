@@ -23,7 +23,7 @@ type Animation = {
 
 export type App = {
   name: string;
-  imageSource: number;
+  imageSource: number | null;
   animations: Animation[];
 };
 

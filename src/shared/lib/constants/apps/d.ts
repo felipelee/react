@@ -1,9 +1,8 @@
-import DiscordImage from "@/assets/images/apps/discord.png";
 import { App } from "../apps-list";
 
 export const discord: App = {
   name: "Discord",
-  imageSource: DiscordImage,
+  imageSource: null,
   animations: [
     {
       name: "Custom switch animation",
