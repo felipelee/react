@@ -1,0 +1,2 @@
+This is a placeholder for splash.png
+For development, you can use any PNG image for your splash screen.
