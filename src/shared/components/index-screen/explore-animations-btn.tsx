@@ -1,10 +1,9 @@
 import React, { FC } from "react";
 import { Pressable, Text, StyleSheet, View, Platform } from "react-native";
-import Animated, { FadeInDown, interpolate, useAnimatedStyle } from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { DrawerActions } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { useIndexAnimation } from "../../lib/providers/index-animation";
 import { useWindowDimensions } from "react-native";
 import * as Haptics from "expo-haptics";
 
@@ -14,16 +13,8 @@ export const ExploreAnimationsBtn: FC = () => {
 
   const navigation = useNavigation();
 
-  const { state } = useIndexAnimation();
-
-  const rContainerStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: interpolate(state.value, [0, 1], [0, 200]) }],
-    };
-  });
-
   return (
-    <Animated.View className="absolute" style={[{ bottom: insets.bottom + 24 }, rContainerStyle]}>
+    <Animated.View className="absolute" style={{ bottom: insets.bottom + 24 }}>
       <Animated.View entering={FadeInDown.delay(1400)}>
         <Pressable
           onPress={() => {

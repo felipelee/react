@@ -101,12 +101,6 @@ export default ({ config }: { config: ExpoConfig }) => ({
         },
       ],
       [
-        "expo-camera",
-        {
-          cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
-        },
-      ],
-      [
         "expo-build-properties",
         {
           android: {
