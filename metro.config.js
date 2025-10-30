@@ -15,6 +15,18 @@ config.resolver = {
     'webp',
     'svg',
   ],
+  resolveRequest: (context, moduleName, platform) => {
+    // Provide web-compatible stub for native-only modules
+    if (platform === 'web' && moduleName === 'react-native-pager-view') {
+      return {
+        filePath: require.resolve('./web-stubs/react-native-pager-view.js'),
+        type: 'sourceFile',
+      };
+    }
+    
+    // Use default resolver for everything else
+    return context.resolveRequest(context, moduleName, platform);
+  },
 };
 
 module.exports = withNativeWind(config, { input: "./global.css" });
